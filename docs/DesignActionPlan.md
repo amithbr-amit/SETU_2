@@ -39,7 +39,7 @@ We utilize a multi-stage refinement process. The core innovation is the **Silver
 | Layer | Schema Type | Responsibility |
 | --- | --- | --- |
 | **Bronze** | **Flat / Raw** | Append-only raw dump from Gateway/Edge Devices. No cleaning. |
-| **Silver** | **Star Schema** | **The Engine.** Cleaned, deduplicated, and normalized facts (Hypertables) + Dimensions. |
+| **Silver** | **Star Schema** | **The Engine.** Cleaned, deduplicated, and normalized facts (Hypertables) + Dimensions. |custom_andon.v_andon_status_threshold
 | **Gold** | **Flat / Agg** | Continuous Aggregates and pre-joined views for specific BI needs. |
 | **Master** | **Normalized** | Global reference data (Users, Roles, Sites). |
 | **WebApp** | **Flat / Cache** | High-speed serving layer for the .NET/Blazor application. |
