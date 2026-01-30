@@ -219,3 +219,4 @@ __marimo__/
 .gemini
 *.csv
 uv.lock
+docs_template/
