@@ -28,4 +28,4 @@ ALTER TABLE ONLY master.plants
     ADD CONSTRAINT plants_company_plant_unique UNIQUE (company_iot_id, plant_id);
 
 -- Indices for performance
-CREATE INDEX plants_lookup_idx ON master.plants (company_iot_id, plant_code) WHERE (effective_to_date > now());
+CREATE INDEX plants_lookup_idx ON master.plants (company_iot_id, plant_id) WHERE (effective_to_date = '9999-12-31 23:59:59+00');

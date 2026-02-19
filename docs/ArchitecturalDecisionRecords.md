@@ -157,3 +157,16 @@
     *   **Flexibility**: `TEXT` allows for future growth without schema migrations.
     *   **Performance**: There is no performance penalty for using `TEXT` over `VARCHAR` in PostgreSQL.
     *   **Simplicity**: Reduces cognitive load during schema design; no need to guess "max lengths".
+
+---
+
+## 5. Procedure Transaction Handling (RCA)
+
+*   **Context**: Several procedures were failing with `SQL Error [2D000]: cannot commit while a subtransaction is active` during manual execution or Flyway migrations.
+*   **Decision**: 
+    1.  **Remove Explicit COMMIT**: Procedures that utilize `EXCEPTION` blocks must NOT contain explicit `COMMIT` or `ROLLBACK` statements.
+    2.  **Rely on Auto-Commit**: Trust the database engine's default behavior to commit the transaction upon successful completion of the `CALL` statement.
+*   **Rationale**: 
+    *   **Subtransaction Conflict**: In PostgreSQL PL/pgSQL, an `EXCEPTION` block internally creates a subtransaction (savepoint). PostgreSQL restricts transaction control commands (`COMMIT/ROLLBACK`) while a subtransaction is active.
+    *   **Robustness**: Standardizing this pattern ensures procedures are compatible with error handling protocols and orchestration tools (like Flyway) without causing transaction state errors.
+    *   **Clean Orchestration**: ETL procedures should log their start/end status and let the high-level orchestration handle the final transaction state where appropriate.

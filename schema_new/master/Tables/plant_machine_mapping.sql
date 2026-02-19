@@ -27,3 +27,6 @@ ALTER TABLE ONLY master.plant_machine_mapping
 
 ALTER TABLE ONLY master.plant_machine_mapping
     ADD CONSTRAINT plant_machine_mapping_machine_iot_id_fkey FOREIGN KEY (machine_iot_id) REFERENCES master.machine_info(iot_id);
+
+-- Indices for performance
+CREATE INDEX plant_machine_mapping_lookup_idx ON master.plant_machine_mapping (company_iot_id, plant_iot_id);

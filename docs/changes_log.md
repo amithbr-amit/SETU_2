@@ -195,3 +195,14 @@ I have completed a major schema wide refactor to align the Master, Silver, Bronz
 - **Silver Cleanup**: Deleted `customer_feedback.sql` table definition as the feedback loop is being relocated/rethought.
 - **Alerting Decommissioning**: Completely removed the `alerting` schema directory (`schema_new/alerting/`). Live alert state and history are now outside the core telemetry scope.
 
+
+## Phase 5: Procedural Transaction Fix [19-Feb-2026]
+
+Resolved a critical transaction conflict in stored procedures where explicit `COMMIT` statements clashed with `EXCEPTION` blocks.
+
+### Changes Implemented
+- **RCA Identified**: PostgreSQL restricts `COMMIT` inside procedures when an `EXCEPTION` block (subtransaction) is active.
+- **Fixed Procedures**: 
+    - `config.sp_generate_shift_schedule`
+    - `etl.sp_upsert_slv_machine_timeline`
+- **Updated ADR**: Added "Procedure Transaction Handling (RCA)" to `docs/ArchitecturalDecisionRecords.md`.

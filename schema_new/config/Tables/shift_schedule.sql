@@ -24,14 +24,9 @@ ALTER TABLE ONLY config.shift_schedule
 -- GIST Index for range lookups
 CREATE INDEX shift_schedule_period_gist_idx ON config.shift_schedule USING gist (period);
 
+-- Unique index to prevent duplicate materialized shifts
+CREATE UNIQUE INDEX shift_schedule_company_date_shift_uidx ON config.shift_schedule (company_iot_id, logical_date, shift_id);
+
 -- Foreign Key
 ALTER TABLE ONLY config.shift_schedule
     ADD CONSTRAINT shift_schedule_company_iot_id_fkey FOREIGN KEY (company_iot_id) REFERENCES master.companies(iot_id);
-
--- Indices for performance
-CREATE INDEX shift_schedule_lookup_idx ON config.shift_schedule (company_iot_id, logical_date);
-CREATE INDEX shift_schedule_range_idx ON config.shift_schedule (shift_start_time, shift_end_time);
-
--- Unique constraint to prevent duplicate materialized shifts
-ALTER TABLE ONLY config.shift_schedule
-    ADD CONSTRAINT shift_schedule_unique UNIQUE (company_iot_id, logical_date, shift_id);

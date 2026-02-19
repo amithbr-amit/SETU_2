@@ -125,7 +125,6 @@ BEGIN
     -- 3. ORCHESTRATION END
     CALL etl.sp_log_job_end(v_log_id, 'SUCCESS', v_rows_affected, 'Processed timeline states from ' || v_start || ' to ' || v_end);
 
-    COMMIT;
 EXCEPTION WHEN OTHERS THEN
     CALL etl.sp_log_job_end(v_log_id, 'FAILED', 0, SQLERRM);
     RAISE;
