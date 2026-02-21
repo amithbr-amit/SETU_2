@@ -2,7 +2,7 @@
     OBJECT: fn_calc_gld_oee_parts
     AUTHOR: Amith B R
     PURPOSE: Calculates part-based OEE metrics (count, theoretical time) from silver focas data.
-    TARGET TABLE: gold.machine_shift_oee
+    TARGET TABLE: gold.machine_shift_partial_oee
     DEPENDENCIES: silver.machine_focas_program_production
 */
 

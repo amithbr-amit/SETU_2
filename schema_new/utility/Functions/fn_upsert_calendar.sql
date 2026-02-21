@@ -9,6 +9,7 @@
 CREATE OR REPLACE FUNCTION utility.fn_upsert_calendar(p_year integer)
 RETURNS void
 LANGUAGE plpgsql
+SET timezone = 'UTC'
 AS $$
 BEGIN
     INSERT INTO master.calendar (
@@ -25,13 +26,13 @@ BEGIN
     )
     SELECT 
         to_char(d, 'YYYYMMDD')::integer AS date_key,
-        (d AT TIME ZONE 'UTC') AS full_date,
+        d AS full_date,
         extract(year from d)::integer AS year,
         extract(isoyear from d)::integer AS iso_year,
         extract(month from d)::integer AS month,
         extract(week from d)::integer AS iso_week,
-        (date_trunc('week', d) AT TIME ZONE 'UTC') AS week_start_date,
-        ((date_trunc('week', d) + interval '6 days') AT TIME ZONE 'UTC') AS week_end_date,
+        date_trunc('week', d) AS week_start_date,
+        (date_trunc('week', d) + interval '6 days') AS week_end_date,
         extract(isodow from d)::integer AS day_of_week,
         extract(isodow from d) IN (6, 7) AS is_weekend
     FROM generate_series(

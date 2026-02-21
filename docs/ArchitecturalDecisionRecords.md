@@ -170,3 +170,18 @@
     *   **Subtransaction Conflict**: In PostgreSQL PL/pgSQL, an `EXCEPTION` block internally creates a subtransaction (savepoint). PostgreSQL restricts transaction control commands (`COMMIT/ROLLBACK`) while a subtransaction is active.
     *   **Robustness**: Standardizing this pattern ensures procedures are compatible with error handling protocols and orchestration tools (like Flyway) without causing transaction state errors.
     *   **Clean Orchestration**: ETL procedures should log their start/end status and let the high-level orchestration handle the final transaction state where appropriate.
+
+---
+
+## 6. Function Language Selection (SQL vs. PL/pgSQL)
+
+*   **Context**: PostgreSQL provides multiple languages for writing functions. Choosing the right one affects both maintainability and system performance.
+*   **Decision**:
+    1.  **Prefer LANGUAGE SQL for "Simple" Logic**: Use `LANGUAGE sql` for functions that consist of a single `SELECT` statement, basic expressions, or simple wrappers.
+    2.  **Use LANGUAGE PL/pgSQL for "Complex" Logic**: Reserve `LANGUAGE plpgsql` for functions requiring procedural control (IF/ELSE, LOOP, variables) or explicit error handling (`EXCEPTION` blocks).
+*   **Rationale - Performance Improvements**:
+    *   **Function Inlining**: The PostgreSQL query optimizer can **inline** `LANGUAGE sql` functions. This means the engine "expands" the function code into the parent query, allowing it to optimize index usage, joins, and filters as if the logic were written inline. `LANGUAGE plpgsql` functions act as a "black box" to the optimizer, often preventing these optimizations.
+    *   **Reduced Overhead**: SQL functions avoid the overhead of initializing the PL/pgSQL interpreter state, which is significant for lightweight utility functions called frequently in large datasets.
+*   **Usage Standards**:
+    *   **Utility Functions**: Like `fn_week_start` or `fn_to_utc` must be `LANGUAGE sql` and `IMMUTABLE` to maximize performance.
+    *   **ETL Calculations**: May use `PL/pgSQL` if they involve complex multi-step processing or if they are top-level procedures (`etl.sp_...`).

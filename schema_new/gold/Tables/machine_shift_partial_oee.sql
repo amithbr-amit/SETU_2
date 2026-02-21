@@ -1,8 +1,8 @@
 --
--- Name: machine_shift_oee; Type: TABLE; Schema: gold; Owner: -
+-- Name: machine_shift_partial_oee; Type: TABLE; Schema: gold; Owner: -
 --
 
-CREATE TABLE gold.machine_shift_oee (
+CREATE TABLE gold.machine_shift_partial_oee (
     company_id text, -- From master.companies.company_id
     plant_id integer, -- From master.plants.plant_id
     machine_id text, -- From master.machine_info.machine_id
@@ -28,9 +28,9 @@ CREATE TABLE gold.machine_shift_oee (
 );
 
 -- Primary Key
-ALTER TABLE ONLY gold.machine_shift_oee
-    ADD CONSTRAINT machine_shift_oee_pkey PRIMARY KEY (company_id, plant_id, machine_id, logical_date, shift_id);
+ALTER TABLE ONLY gold.machine_shift_partial_oee
+    ADD CONSTRAINT machine_shift_partial_oee_pkey PRIMARY KEY (company_id, plant_id, machine_id, logical_date, shift_id);
 
 -- Indices
-CREATE INDEX idx_gld_oee_date ON gold.machine_shift_oee (logical_date);
-CREATE INDEX idx_gld_oee_machine ON gold.machine_shift_oee (machine_id);
+CREATE INDEX idx_gld_oee_date ON gold.machine_shift_partial_oee (logical_date);
+CREATE INDEX idx_gld_oee_machine ON gold.machine_shift_partial_oee (machine_id);

@@ -1,13 +1,13 @@
 /*
-    OBJECT: sp_upsert_gld_machine_shift_oee
+    OBJECT: sp_upsert_gld_machine_shift_partial_oee
     AUTHOR: Amith B R
     PURPOSE: Consolidates OEE time and parts metrics into a single gold layer report at shift level.
-    TARGET TABLE: gold.machine_shift_oee
+    TARGET TABLE: gold.machine_shift_partial_oee
     DEPENDENCIES: etl.fn_calc_gld_oee_time, etl.fn_calc_gld_oee_parts
 */
 
-CREATE OR REPLACE PROCEDURE etl.sp_upsert_gld_machine_shift_oee(
-    p_job_name TEXT DEFAULT 'sp_upsert_gld_machine_shift_oee',
+CREATE OR REPLACE PROCEDURE etl.sp_upsert_gld_machine_shift_partial_oee(
+    p_job_name TEXT DEFAULT 'sp_upsert_gld_machine_shift_partial_oee',
     p_start_date DATE DEFAULT NULL,
     p_end_date DATE DEFAULT NULL
 )
@@ -43,7 +43,7 @@ BEGIN
     -- 2. CORE LOGIC (The "Meat")
     -------------------------------------------------------------------------
     -- 2.1 Upsert Time Metrics
-    INSERT INTO gold.machine_shift_oee (
+    INSERT INTO gold.machine_shift_partial_oee (
         company_id, plant_id, machine_id, logical_date, shift_id, shift_name,
         shift_start, shift_end, total_shift_duration_sec, total_down_sec, 
         total_utilised_sec, total_load_unload_sec, total_exceeded_load_unload_sec,
@@ -72,7 +72,7 @@ BEGIN
     WITH parts_data AS (
         SELECT * FROM etl.fn_calc_gld_oee_parts(v_start_date, v_end_date)
     )
-    UPDATE gold.machine_shift_oee g
+    UPDATE gold.machine_shift_partial_oee g
     SET 
         total_parts = p.total_parts,
         total_theoretical_time_sec = p.total_theoretical_time_sec,
@@ -87,7 +87,7 @@ BEGIN
       AND g.shift_id = p.shift_id;
 
     -- 2.3 Final Efficiency Calculations
-    UPDATE gold.machine_shift_oee
+    UPDATE gold.machine_shift_partial_oee
     SET 
         availability_effy = CASE WHEN total_shift_duration_sec > 0 THEN total_utilised_sec / total_shift_duration_sec ELSE 0 END,
         production_effy = CASE WHEN total_utilised_sec > 0 THEN total_theoretical_time_sec / total_utilised_sec ELSE 0 END,

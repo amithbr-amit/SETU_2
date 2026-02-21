@@ -9,6 +9,8 @@ CREATE TABLE master.plants (
     plant_code text,
     description text,
     is_primary boolean DEFAULT false,
+    cost_per_kwh numeric(10, 3) DEFAULT 6,
+    carbon_emission_factor numeric(10, 3) DEFAULT 0.82,
     effective_from_date timestamp with time zone DEFAULT now(),
     effective_to_date timestamp with time zone DEFAULT '9999-12-31 23:59:59+00',
     updated_by text,

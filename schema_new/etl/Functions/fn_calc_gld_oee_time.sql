@@ -2,7 +2,7 @@
     OBJECT: fn_calc_gld_oee_time
     AUTHOR: Amith B R
     PURPOSE: Aggregates time-based metrics (durations) from machine timeline for OEE calculation.
-    TARGET TABLE: gold.machine_shift_oee
+    TARGET TABLE: gold.machine_shift_partial_oee
     DEPENDENCIES: silver.machine_timeline
 */
 
