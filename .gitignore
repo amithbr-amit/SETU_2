@@ -220,3 +220,6 @@ __marimo__/
 *.csv
 uv.lock
 docs_template/
+start/
+package-lock.json
+package.json
